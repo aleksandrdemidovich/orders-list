@@ -1,41 +1,32 @@
-export type AppStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
+export type AppStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
 type InitialStateType = {
     status: AppStatusType
-    error: string
+    error: string | null
     isInitialized: boolean
 }
 
 
-const initialState: InitialStateType = {
-    status: 'idle',
-    error: '',
-    isInitialized: false
-}
-
-export const appReducer = (state: InitialStateType = initialState, action: AppActionsType): InitialStateType => {
-    switch (action.type) {
-        case 'SET-APP-STATUS':
+export const slice = createSlice({
+    name: 'app',
+    initialState: {
+        status: 'idle',
+        error: '',
+        isInitialized: false
+    } as InitialStateType,
+    reducers: {
+        setAppStatus(state, action: PayloadAction<{ status: AppStatusType }>){
             return {...state, status: action.payload.status};
-        case 'SET-APP-ERROR':
+        },
+        setAppError(state, action: PayloadAction<{ error: string | null }>){
             return {...state, error: action.payload.error}
-        case 'SET-APP-IS-INITIALIZED':
+        },
+        setIsInitialized(state, action: PayloadAction<{ isInitialized: boolean }>){
             return {...state, isInitialized: action.payload.isInitialized}
-        default:
-            return state
-    }
-}
+        },
+    },
+})
 
-
-export const setAppStatus = (payload: { status: AppStatusType }) => ({type: 'SET-APP-STATUS', payload} as const)
-export const setAppError = (payload: { error: string }) => ({type: 'SET-APP-ERROR', payload} as const)
-export const setIsInitialized = (payload: { isInitialized: boolean }) => ({
-    type: 'SET-APP-IS-INITIALIZED',
-    payload
-} as const)
-
-
-export type AppActionsType =
-    | ReturnType<typeof setAppStatus>
-    | ReturnType<typeof setAppError>
-    | ReturnType<typeof setIsInitialized>
+export const appReducer = slice.reducer
+export const {setAppError, setAppStatus, setIsInitialized} = slice.actions

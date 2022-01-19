@@ -1,10 +1,13 @@
-import {Container, Paper, styled} from '@mui/material';
+import {Button, Container, Paper, styled} from '@mui/material';
 import React, {useEffect} from 'react';
 import CartItem from "../../components/CartItem";
 import OrderForm from "../../components/OrderForm";
 import {useDispatch, useSelector} from "react-redux";
 import {AppStateType} from "../../redux/store";
 import {addItemToCart, calculateTotalPrice, ItemType} from "../../redux/cart-reducer";
+import {PATH} from "../../components/AppRoutes";
+import {useNavigate} from "react-router-dom";
+
 
 
 function CartPage() {
@@ -13,6 +16,7 @@ function CartPage() {
     const totalCartPrice = useSelector<AppStateType, number>(state => state.cart.totalCartPrice)
 
     const dispatch = useDispatch()
+    let navigate = useNavigate();
 
     let arr: Array<ItemType> = []
 
@@ -47,7 +51,12 @@ function CartPage() {
                 <h5 style={{color: 'gray', margin: 0}}>{cartItems.length} item worth: {totalCartPrice} $</h5>
                 <RootContainer>
                     <CartItemsContainer>
-                        {cartItems.length || arr.length ? productsInCart : <h1 style={{margin:'20% auto', color:'gray'}}>Cart is empty</h1>}
+                        {cartItems.length || arr.length
+                            ? productsInCart
+                            : <div style={{margin:'20% auto', color:'gray', display:'flex', flexDirection:'column', alignItems:"center"}}>
+                                <h1 style={{color:'gray', marginTop:0}}>Cart is empty</h1>
+                                <Button onClick={() => {navigate(PATH.PRODUCTS)}} variant={"contained"} color={"primary"}>Add something</Button>
+                        </div>}
                     </CartItemsContainer>
                     <OrderBlockContainer elevation={8}>
                         <h3>Contacts for ordering</h3>

@@ -2,9 +2,12 @@ import React from 'react';
 import {Button, Container} from "@mui/material";
 import {useSelector} from "react-redux";
 import {AppStateType} from "../../redux/store";
+import {useNavigate} from "react-router-dom";
+import {PATH} from "../../components/AppRoutes";
 
 
 function InfoAboutOrderPage() {
+    let navigate = useNavigate();
 
     const orderInfo = useSelector<AppStateType, any>(state => state.order)
 
@@ -18,7 +21,7 @@ function InfoAboutOrderPage() {
                 <Button variant={"contained"}
                         color={"success"}
                         style={{marginLeft:'45%'}}
-                        onClick={() => window.location.replace('/')}>Go To Home Page</Button>
+                        onClick={() => navigate(PATH.PRODUCTS)}>Go To Home Page</Button>
             </Container>
         </div>
     );

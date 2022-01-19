@@ -1,4 +1,5 @@
 import {ItemType} from "./cart-reducer";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 type ContactsType = {
     name: string
@@ -11,32 +12,24 @@ type InitialStateType = {
     orderList: Array<ItemType> | null
     totalPrice: number | null
 }
-const initialState: InitialStateType = {
-    contacts: null,
-    orderList: null,
-    totalPrice: null
-}
 
-export const orderReducer = (state: InitialStateType = initialState, action: AppActionsType): InitialStateType => {
-    switch (action.type) {
-        case "SET-CONTACTS":
-            return {...state, contacts: action.payload.contacts}
-        case "SET-ORDER-LIST":
-            return {...state, orderList: action.payload.orderList}
-        case "SET-TOTAL-PRICE":
-            return {...state, totalPrice: action.payload.totalPrice}
-        default:
-            return state
-    }
-}
+export const slice = createSlice({
+    name: 'order',
+    initialState: {
+        contacts: null,
+        orderList: null,
+        totalPrice: null
+    } as InitialStateType,
+    reducers: {
+        setOrderList(state, action: PayloadAction<{ orderList: Array<ItemType>, contacts: ContactsType, totalPrice: number }>){
+            return {...state, contacts: action.payload.contacts, totalPrice:action.payload.totalPrice, orderList: action.payload.orderList}
+        },
+    },
+})
 
-
-export const setContactsInfo = (payload: { contacts: ContactsType }) => ({type: 'SET-CONTACTS', payload} as const)
-export const setOrderList = (payload: { orderList: Array<ItemType> }) => ({type: 'SET-ORDER-LIST', payload} as const)
-export const setTotalPrice = (payload: { totalPrice: number }) => ({type: 'SET-TOTAL-PRICE', payload} as const)
+export const orderReducer = slice.reducer
+export const {setOrderList} = slice.actions
 
 
-export type AppActionsType =
-    | ReturnType<typeof setContactsInfo>
-    | ReturnType<typeof setOrderList>
-    | ReturnType<typeof setTotalPrice>
+
+

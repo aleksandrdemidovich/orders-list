@@ -19,7 +19,8 @@ import {AppStateType} from "../redux/store";
 import {ItemType} from "../redux/cart-reducer";
 
 const pages = [{pageName: 'Products', pageUrl: PATH.PRODUCTS},
-    {pageName: 'Cart', pageUrl: PATH.CART}];
+    {pageName: 'Cart', pageUrl: PATH.CART},
+    {pageName: 'Add new product', pageUrl: PATH.CREATE_NEW_PRODUCT},];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const ResponsiveAppBar = () => {

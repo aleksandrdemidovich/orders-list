@@ -4,7 +4,7 @@ import {useFormik} from "formik";
 import {useDispatch, useSelector} from "react-redux";
 import {AppStateType} from "../redux/store";
 import {ItemType} from "../redux/cart-reducer";
-import {setContactsInfo, setOrderList, setTotalPrice} from "../redux/order-reducer";
+import {setOrderList} from "../redux/order-reducer";
 import {AppStatusType, setAppStatus} from "../redux/app-reducer";
 import { Navigate } from 'react-router-dom';
 import {PATH} from "./AppRoutes";
@@ -49,9 +49,7 @@ function OrderForm() {
         },
         onSubmit: (values) => {
             dispatch(setAppStatus({status:'loading'}))
-            dispatch(setContactsInfo({contacts:values}))
-            dispatch(setOrderList({orderList:cartItems}))
-            dispatch(setTotalPrice({totalPrice}))
+            dispatch(setOrderList({contacts: values, orderList:cartItems, totalPrice}))
             dispatch(setAppStatus({status:'succeeded'}))
         },
     })
@@ -99,6 +97,7 @@ function OrderForm() {
                         required
                         variant="outlined"/>
             <Button type="submit" variant={"contained"} size={"large"} color={"primary"}
+                    disabled={!cartItems.length}
                     style={{width: '80%', margin: '25px 0 25px 0'}}>Order</Button>
         </StyledForm>
     );

@@ -6,12 +6,15 @@ import {AppStateType} from "../../redux/store";
 import Preloader from "../../components/Preloader";
 import {fetchProducts, ProductInfo} from "../../redux/products-reducer";
 import {AppStatusType} from "../../redux/app-reducer";
+import {ErrorSnackbar} from "../../components/ErrorSnackbar";
 
 
 function ProductsListPage() {
 
-    const products = useSelector<AppStateType, Array<ProductInfo>>(state => state.products.products)
+    const products = useSelector<AppStateType, Array<ProductInfo>>(state => state.products)
     const appStatus = useSelector<AppStateType, AppStatusType>(state => state.app.status)
+    const error = useSelector<AppStateType, string | null>(state => state.app.error);
+
 
     const dispatch = useDispatch()
 
@@ -31,6 +34,7 @@ function ProductsListPage() {
 
     return (
         <div className="App">
+            {error && <ErrorSnackbar/>}
             <Container maxWidth="xl">
                 <CardsContainer>
                     {productsElements}
