@@ -1,7 +1,7 @@
 import {setAppError, setAppStatus} from "./app-reducer";
 import {addDoc, collection, getDocs} from "firebase/firestore";
-import db from "../Firebase/firebase";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {db} from "../Firebase/firebase";
 
 export type ProductInfo = {
     img: string

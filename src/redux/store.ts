@@ -1,25 +1,19 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux'
-import thunkMiddleWare from 'redux-thunk'
-import {appReducer} from "./app-reducer";
-import {productsReducer} from "./products-reducer";
-import {cartReducer} from "./cart-reducer";
-import {orderReducer} from "./order-reducer";
+import {configureStore} from "@reduxjs/toolkit";
+import {rootReducer} from "./reducers";
+import thunkMiddleware from 'redux-thunk'
 
 
 
-let rootReducers = combineReducers({
-    app: appReducer,
-    products: productsReducer,
-    cart: cartReducer,
-    order: orderReducer
+export const store = configureStore({
+    reducer: rootReducer,
+    middleware: getDefaultMiddleware => getDefaultMiddleware().prepend(thunkMiddleware)
 })
 
 
-export type AppStateType = ReturnType<typeof rootReducers>
+export type AppStateType = ReturnType<typeof rootReducer>
 export type storeType = typeof store
-const store = createStore( rootReducers, applyMiddleware(thunkMiddleWare))
 
-export default store
+
 
 // @ts-ignore
 window.store = store;

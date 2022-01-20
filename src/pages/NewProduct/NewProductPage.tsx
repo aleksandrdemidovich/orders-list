@@ -45,56 +45,56 @@ function NewProductPage() {
             return errors;
         },
         onSubmit: async (values) => {
-            dispatch(addNewProduct({name:formik.values.name, pricePerOne:+formik.values.pricePerOne,
-                description:formik.values.description, imgLink: formik.values.img}))
+            dispatch(addNewProduct({
+                name: formik.values.name, pricePerOne: +formik.values.pricePerOne,
+                description: formik.values.description, imgLink: formik.values.img
+            }))
             formik.resetForm()
         },
     })
 
-    if(appStatus === 'loading'){
+    if (appStatus === 'loading') {
         return <Preloader/>
     }
 
     return (
-        <div className="App">
-            <Container maxWidth="xl">
-                <NewProductContainer elevation={8} style={{width: '30%', margin: '100px auto'}}>
-                    <h1>New Product</h1>
-                    <StyledForm onSubmit={formik.handleSubmit}>
-                        <NewProductInput variant={"outlined"} label={'Name'} required
-                                         name="name"
-                                         value={formik.values.name}
-                                         onChange={formik.handleChange}
-                                         error={!!formik.errors.name}
-                                         helperText={formik.errors.name}/>
-                        <NewProductInput variant={"outlined"} label={'Price'} required
-                                         name="pricePerOne"
-                                         value={formik.values.pricePerOne}
-                                         onChange={formik.handleChange}
-                                         error={!!formik.errors.pricePerOne}
-                                         helperText={formik.errors.pricePerOne}/>
-                        <NewProductInput variant={"outlined"} label={'Description'} required
-                                         name="description"
-                                         value={formik.values.description}
-                                         onChange={formik.handleChange}
-                                         error={!!formik.errors.description}
-                                         helperText={formik.errors.description}/>
-                        <NewProductInput variant={"outlined"} label={'Image link'} required
-                                         name="img"
-                                         value={formik.values.img}
-                                         onChange={formik.handleChange}
-                                         error={!!formik.errors.img}
-                                         helperText={formik.errors.img}/>
-                        <Button type="submit"
-                                variant={"contained"}
-                                color={"primary"}
-                                style={{width: '80%', margin: '25px 0 25px 0'}}>
-                            Create
-                        </Button>
-                    </StyledForm>
-                </NewProductContainer>
-            </Container>
-        </div>
+        <Container maxWidth="xl">
+            <NewProductContainer elevation={8} style={{width: '30%', margin: '100px auto'}}>
+                <h1>New Product</h1>
+                <StyledForm onSubmit={formik.handleSubmit}>
+                    <NewProductInput variant={"outlined"} label={'Name'} required
+                                     name="name"
+                                     value={formik.values.name}
+                                     onChange={formik.handleChange}
+                                     error={!!formik.errors.name}
+                                     helperText={formik.errors.name}/>
+                    <NewProductInput variant={"outlined"} label={'Price'} required
+                                     name="pricePerOne"
+                                     value={formik.values.pricePerOne}
+                                     onChange={formik.handleChange}
+                                     error={!!formik.errors.pricePerOne}
+                                     helperText={formik.errors.pricePerOne}/>
+                    <NewProductInput variant={"outlined"} label={'Description'} required
+                                     name="description"
+                                     value={formik.values.description}
+                                     onChange={formik.handleChange}
+                                     error={!!formik.errors.description}
+                                     helperText={formik.errors.description}/>
+                    <NewProductInput variant={"outlined"} label={'Image link'} required
+                                     name="img"
+                                     value={formik.values.img}
+                                     onChange={formik.handleChange}
+                                     error={!!formik.errors.img}
+                                     helperText={formik.errors.img}/>
+                    <Button type="submit"
+                            variant={"contained"}
+                            color={"primary"}
+                            style={{width: '80%', margin: '25px 0 25px 0'}}>
+                        Create
+                    </Button>
+                </StyledForm>
+            </NewProductContainer>
+        </Container>
     );
 }
 

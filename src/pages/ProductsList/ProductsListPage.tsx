@@ -7,6 +7,7 @@ import Preloader from "../../components/Preloader";
 import {fetchProducts, ProductInfo} from "../../redux/products-reducer";
 import {AppStatusType} from "../../redux/app-reducer";
 import {ErrorSnackbar} from "../../components/ErrorSnackbar";
+import {authMe} from "../../redux/auth-reducer";
 
 
 function ProductsListPage() {
@@ -16,12 +17,17 @@ function ProductsListPage() {
     const error = useSelector<AppStateType, string | null>(state => state.app.error);
 
 
+
     const dispatch = useDispatch()
 
     useEffect(() => {
         dispatch(fetchProducts())
     }, [dispatch])
 
+
+    useEffect(() => {
+        dispatch(authMe())
+    }, [])
 
 
     if(appStatus === 'loading'){

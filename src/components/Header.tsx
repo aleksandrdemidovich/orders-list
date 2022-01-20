@@ -13,23 +13,26 @@ import MenuItem from '@mui/material/MenuItem';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import {useLocation, useNavigate} from "react-router-dom";
 import {PATH} from "./AppRoutes";
-import {Badge} from "@mui/material";
-import {useSelector} from "react-redux";
+import {Avatar, Badge} from "@mui/material";
+import {useDispatch, useSelector} from "react-redux";
 import {AppStateType} from "../redux/store";
 import {ItemType} from "../redux/cart-reducer";
+import {logout} from "../redux/auth-reducer";
 
 const pages = [{pageName: 'Products', pageUrl: PATH.PRODUCTS},
     {pageName: 'Cart', pageUrl: PATH.CART},
     {pageName: 'Add new product', pageUrl: PATH.CREATE_NEW_PRODUCT},];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Settings', 'Logout'];
 
 const ResponsiveAppBar = () => {
 
     const cartItems = useSelector<AppStateType, Array<ItemType>>(state => state.cart.items)
     const totalCartPrice = useSelector<AppStateType, number>(state => state.cart.totalCartPrice)
+    const isLoggedIn = useSelector<AppStateType, boolean>(state => state.auth.isLoggedIn)
 
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const location = useLocation();
 
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -38,8 +41,18 @@ const ResponsiveAppBar = () => {
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
     };
-    const handleCloseNavMenu = () => {
+    const handleCloseNavMenu = (itemName: string) => {
+        if (itemName === 'Logout') {
+            dispatch(logout())
+        } else if (itemName === 'Profile') {
+            alert('Profile')
+        } else if (itemName === 'Settings') {
+            alert('Settings')
+        }
         setAnchorElNav(null);
+    };
+    const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorElUser(event.currentTarget);
     };
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
@@ -49,7 +62,7 @@ const ResponsiveAppBar = () => {
     return (
         <AppBar position="static">
             <Container maxWidth="xl">
-                <Toolbar disableGutters>
+                <Toolbar disableGutters style={{justifyContent:'space-between'}}>
                     <Typography
                         variant="h6"
                         noWrap
@@ -70,7 +83,7 @@ const ResponsiveAppBar = () => {
                         >
                             <MenuIcon/>
                         </IconButton>
-                        <Menu
+                        {isLoggedIn && <Menu
                             id="menu-appbar"
                             anchorEl={anchorElNav}
                             anchorOrigin={{
@@ -93,7 +106,7 @@ const ResponsiveAppBar = () => {
                                     <Typography textAlign="center">{page.pageName}</Typography>
                                 </MenuItem>
                             ))}
-                        </Menu>
+                        </Menu>}
                     </Box>
                     <Typography
                         variant="h6"
@@ -101,9 +114,9 @@ const ResponsiveAppBar = () => {
                         component="div"
                         sx={{flexGrow: 1, display: {xs: 'flex', md: 'none'}}}
                     >
-                        LOGO
+                        iMarket
                     </Typography>
-                    <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
+                    {isLoggedIn ? <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
                         {pages.map((page) => (
                             <Button
                                 key={page.pageName}
@@ -113,43 +126,61 @@ const ResponsiveAppBar = () => {
                                 {page.pageName}
                             </Button>
                         ))}
-                    </Box>
+                    </Box> : <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
+                            <Button
+                                onClick={() => navigate(PATH.PRODUCTS)}
+                                sx={{my: 2, color: 'white', display: 'block'}}
+                            >
+                                Products
+                            </Button>
 
-                    <Box sx={{flexGrow: 0}} display={"flex"} alignItems={"center"} flexDirection={"row"}>
-                        {location.pathname === PATH.PRODUCTS && totalCartPrice !== 0 && cartItems.length >= 1 &&
-                        <Typography variant={"subtitle2"} style={{marginRight: '15px'}}>
-                            Total price: {totalCartPrice}$
+                    </Box>}
+
+                    {isLoggedIn ? <Box sx={{flexGrow: 0}} display={"flex"} alignItems={"center"} flexDirection={"row"}>
+                            {location.pathname === PATH.PRODUCTS && totalCartPrice !== 0 && cartItems.length >= 1 &&
+                            <Typography variant={"subtitle2"} style={{marginRight: '15px'}}>
+                                Total price: {totalCartPrice}$
                             </Typography>}
-                        <Tooltip title="Open cart">
-                            <IconButton sx={{p: 0, marginRight: '10px'}} onClick={() => navigate(PATH.CART)}>
-                                <Badge badgeContent={cartItems.length} color="secondary">
-                                    <ShoppingCartOutlinedIcon fontSize={"large"}/>
-                                </Badge>
-                            </IconButton>
-                        </Tooltip>
-                        <Menu
-                            sx={{mt: '45px'}}
-                            id="menu-appbar"
-                            anchorEl={anchorElUser}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            open={Boolean(anchorElUser)}
-                            onClose={handleCloseUserMenu}
-                        >
-                            {settings.map((setting) => (
-                                <MenuItem key={setting} onClick={handleCloseNavMenu}>
-                                    <Typography textAlign="center">{setting}</Typography>
-                                </MenuItem>
-                            ))}
-                        </Menu>
-                    </Box>
+                            <Tooltip title="Open cart">
+                                <IconButton sx={{p: 0, marginRight: '10px'}} onClick={() => navigate(PATH.CART)}>
+                                    <Badge badgeContent={cartItems.length} color="secondary">
+                                        <ShoppingCartOutlinedIcon fontSize={"large"}/>
+                                    </Badge>
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Open settings">
+                                <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
+                                    <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg"/>
+                                </IconButton>
+                            </Tooltip>
+                            <Menu
+                                sx={{mt: '45px'}}
+                                id="menu-appbar"
+                                anchorEl={anchorElUser}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                open={Boolean(anchorElUser)}
+                                onClose={handleCloseUserMenu}
+                            >
+                                {settings.map((setting) => (
+                                    <MenuItem key={setting} onClick={() => handleCloseNavMenu(setting)}>
+                                        <Typography textAlign="center">{setting}</Typography>
+                                    </MenuItem>
+                                ))}
+                            </Menu>
+                        </Box>
+                        : <Box sx={{flexGrow: 0}} display={"flex"} alignItems={"center"} flexDirection={"row"}>
+                            <Button variant={"text"} color={"inherit"} onClick={() => navigate(PATH.LOGIN)}>Sign
+                                In</Button>
+                        </Box>}
+
                 </Toolbar>
             </Container>
         </AppBar>
