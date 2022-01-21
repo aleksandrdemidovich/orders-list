@@ -8,6 +8,7 @@ import {fetchProducts, ProductInfo} from "../../redux/products-reducer";
 import {AppStatusType} from "../../redux/app-reducer";
 import {ErrorSnackbar} from "../../components/ErrorSnackbar";
 import {authMe} from "../../redux/auth-reducer";
+import Profile from "../Profile/Profile";
 
 
 function ProductsListPage() {

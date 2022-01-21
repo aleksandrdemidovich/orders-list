@@ -4,6 +4,7 @@ import {cartReducer} from "./cart-reducer";
 import {orderReducer} from "./order-reducer";
 import {appReducer} from "./app-reducer";
 import {authReducer} from "./auth-reducer";
+import {profileReducer} from "./profile-reducer";
 
 export const rootReducer = combineReducers({
     app: appReducer,
@@ -11,4 +12,5 @@ export const rootReducer = combineReducers({
     cart: cartReducer,
     order: orderReducer,
     auth: authReducer,
+    profile: profileReducer
 })

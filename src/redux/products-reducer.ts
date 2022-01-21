@@ -23,7 +23,6 @@ export const fetchProducts = createAsyncThunk('products/fetchProducts', async (p
         dispatch(setAppStatus({status: "succeeded"}))
         return {products: productArr}
     } catch (err) {
-        console.log(err)
         dispatch(setAppError({error: err as string}))
     } finally {
         dispatch(setAppStatus({status: "idle"}))
@@ -43,7 +42,6 @@ export const addNewProduct = createAsyncThunk('products/addNewProducts', async (
         });
         dispatch(setAppStatus({status: "succeeded"}))
     } catch (e) {
-        console.log(e)
         dispatch(setAppError({error: e as string}))
     } finally {
         dispatch(setAppStatus({status: "idle"}))

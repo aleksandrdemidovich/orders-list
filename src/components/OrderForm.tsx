@@ -6,7 +6,7 @@ import {AppStateType} from "../redux/store";
 import {ItemType} from "../redux/cart-reducer";
 import {setOrderList} from "../redux/order-reducer";
 import {AppStatusType, setAppStatus} from "../redux/app-reducer";
-import { Navigate } from 'react-router-dom';
+import {Navigate, useNavigate} from 'react-router-dom';
 import {PATH} from "./AppRoutes";
 
 type FormikErrorType = {
@@ -23,6 +23,8 @@ function OrderForm() {
     const appStatus = useSelector<AppStateType, AppStatusType>(state => state.app.status)
 
     const dispatch = useDispatch()
+    const navigate = useNavigate();
+
 
     const formik = useFormik({
         initialValues: {
@@ -51,12 +53,13 @@ function OrderForm() {
             dispatch(setAppStatus({status:'loading'}))
             dispatch(setOrderList({contacts: values, orderList:cartItems, totalPrice}))
             dispatch(setAppStatus({status:'succeeded'}))
+            navigate(PATH.INFO_ABOUT_ORDER)
         },
     })
 
-    if(appStatus === 'succeeded'){
-        return <Navigate to={PATH.INFO_ABOUT_ORDER}/>
-    }
+    // if(appStatus === 'succeeded'){
+    //     return <Navigate to={PATH.INFO_ABOUT_ORDER}/>
+    // }
 
     return (
         <StyledForm onSubmit={formik.handleSubmit}>

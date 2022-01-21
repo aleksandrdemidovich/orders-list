@@ -29,6 +29,8 @@ const ResponsiveAppBar = () => {
     const cartItems = useSelector<AppStateType, Array<ItemType>>(state => state.cart.items)
     const totalCartPrice = useSelector<AppStateType, number>(state => state.cart.totalCartPrice)
     const isLoggedIn = useSelector<AppStateType, boolean>(state => state.auth.isLoggedIn)
+    const userPhoto = useSelector<AppStateType, string | null | undefined >(state => state.profile.profile?.photoURL)
+    const userEmail = useSelector<AppStateType, string>(state => state.auth.email)
 
 
     const navigate = useNavigate();
@@ -45,9 +47,9 @@ const ResponsiveAppBar = () => {
         if (itemName === 'Logout') {
             dispatch(logout())
         } else if (itemName === 'Profile') {
-            alert('Profile')
+            navigate(PATH.PROFILE)
         } else if (itemName === 'Settings') {
-            alert('Settings')
+            navigate(PATH.SETTINGS)
         }
         setAnchorElNav(null);
     };
@@ -150,7 +152,7 @@ const ResponsiveAppBar = () => {
                             </Tooltip>
                             <Tooltip title="Open settings">
                                 <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
-                                    <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg"/>
+                                    <Avatar alt={userEmail} src={userPhoto !== null ? userPhoto : 'I'}/>
                                 </IconButton>
                             </Tooltip>
                             <Menu

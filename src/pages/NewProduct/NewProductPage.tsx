@@ -59,7 +59,7 @@ function NewProductPage() {
 
     return (
         <Container maxWidth="xl">
-            <NewProductContainer elevation={8} style={{width: '30%', margin: '100px auto'}}>
+            <NewProductContainer elevation={8}>
                 <h1>New Product</h1>
                 <StyledForm onSubmit={formik.handleSubmit}>
                     <NewProductInput variant={"outlined"} label={'Name'} required
@@ -111,6 +111,15 @@ const NewProductContainer = styled(Paper)`
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 30%; 
+  margin: 100px auto;
+
+  @media (min-width: 300px) and (max-width: 768px) {
+    width: 90%;
+  }
+  @media (min-width: 769px) and (max-width: 1440px) {
+    width: 50%;
+  }
 `
 const NewProductInput = styled(TextField)`
   width: 80%;

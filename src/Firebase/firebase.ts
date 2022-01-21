@@ -1,8 +1,10 @@
 // Import the functions you need from the SDKs you need
 import {initializeApp} from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
-import firebase from "firebase/compat/app";
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider,GithubAuthProvider, TwitterAuthProvider } from "firebase/auth";
+import firebase from "firebase/compat";
+
+
 
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -19,14 +21,24 @@ export const firebaseConfig = {
     appId: "1:732890230800:web:3ce0d7c3473b2222dc9a95",
     measurementId: "G-HCP0ZZZZ9K",
 };
-
+export const uiConfig = {
+    signInFlow: 'popup',
+    signInSuccessUrl: 'http://localhost:3000/products-list', // This URL is used to return to that page when we got success response for phone authentication.
+    signInOptions: [
+        { provider: GoogleAuthProvider.PROVIDER_ID, defaultCountry: 'EN' },
+        { provider: FacebookAuthProvider.PROVIDER_ID, defaultCountry: 'EN'},
+        { provider: GithubAuthProvider.PROVIDER_ID, defaultCountry: 'EN'},
+        { provider: TwitterAuthProvider.PROVIDER_ID, defaultCountry: 'EN'},
+    ],
+    tosUrl: 'http://localhost:3000/'
+}
 
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
-console.log(app.name)
 export const db = getFirestore(app)
 export const auth = getAuth(app);
+
 
 
 

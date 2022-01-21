@@ -7,7 +7,7 @@ import {AppStateType} from "../../redux/store";
 import {addItemToCart, calculateTotalPrice, ItemType} from "../../redux/cart-reducer";
 import {PATH} from "../../components/AppRoutes";
 import {useNavigate} from "react-router-dom";
-
+import {authMe} from "../../redux/auth-reducer";
 
 
 function CartPage() {
@@ -22,7 +22,7 @@ function CartPage() {
 
     for (const key in localStorage) {
         if (localStorage.hasOwnProperty(key)) {
-            let item = JSON.parse( localStorage.getItem(key) as string );
+            let item = JSON.parse(localStorage.getItem(key) as string);
             arr.push(item)
         }
     }
@@ -36,12 +36,14 @@ function CartPage() {
             arr.map((item) => dispatch(addItemToCart({item})))
         }
     }, [dispatch])
-
     useEffect(() => {
         if (cartItems.length) {
             dispatch(calculateTotalPrice())
         }
     }, [cartItems, dispatch])
+    useEffect(() => {
+        dispatch(authMe())
+    }, [])
 
 
     return (
@@ -53,10 +55,18 @@ function CartPage() {
                     <CartItemsContainer>
                         {cartItems.length || arr.length
                             ? productsInCart
-                            : <div style={{margin:'20% auto', color:'gray', display:'flex', flexDirection:'column', alignItems:"center"}}>
-                                <h1 style={{color:'gray', marginTop:0}}>Cart is empty</h1>
-                                <Button onClick={() => {navigate(PATH.PRODUCTS)}} variant={"contained"} color={"primary"}>Add something</Button>
-                        </div>}
+                            : <div style={{
+                                margin: '20% auto',
+                                color: 'gray',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: "center"
+                            }}>
+                                <h1 style={{color: 'gray', marginTop: 0}}>Cart is empty</h1>
+                                <Button onClick={() => {
+                                    navigate(PATH.PRODUCTS)
+                                }} variant={"contained"} color={"primary"}>Add something</Button>
+                            </div>}
                     </CartItemsContainer>
                     <OrderBlockContainer elevation={8}>
                         <h3>Contacts for ordering</h3>
@@ -77,6 +87,10 @@ const RootContainer = styled("div")`
   flex-wrap: nowrap;
   margin-top: 20px;
   justify-content: space-between;
+
+  @media (min-width: 300px) and (max-width: 768px) {
+    flex-direction: column;
+  }
 `
 const CartItemsContainer = styled(Paper)`
   display: flex;
@@ -90,14 +104,17 @@ const CartItemsContainer = styled(Paper)`
   &::-webkit-scrollbar {
     width: 5px;
   }
-
   &::-webkit-scrollbar-track {
     background: gray;
   }
-
   &::-webkit-scrollbar-thumb {
     background-color: #42a5f5;
     border-radius: 20px;
+  }
+  
+  @media (min-width: 300px) and (max-width: 768px) {
+    width: 100%;
+    margin-bottom: 20px;
   }
 `
 const OrderBlockContainer = styled(Paper)`
@@ -107,4 +124,9 @@ const OrderBlockContainer = styled(Paper)`
   width: 30%;
   align-items: center;
   height: min-content;
+
+  @media (min-width: 300px) and (max-width: 768px) {
+    width: 100%;
+    margin-bottom: 20px;
+  }
 `

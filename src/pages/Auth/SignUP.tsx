@@ -67,7 +67,7 @@ function SignUP() {
     }
 
     return (
-        <Container maxWidth="xl">
+        <>
             <SignUPContainer elevation={8}>
                 <SignUPHeader>
                     <Tooltip title={'Back to login'}>
@@ -109,7 +109,7 @@ function SignUP() {
                     </Button>
                 </StyledForm>
             </SignUPContainer>
-        </Container>
+        </>
     );
 }
 
@@ -129,6 +129,12 @@ const SignUPContainer = styled(Paper)`
   align-items: center;
   width: 30%;
   margin: 100px auto 20px auto;
+  @media (min-width: 300px) and (max-width: 768px) {
+    width: 90%;
+  }
+  @media (min-width: 769px) and (max-width: 1440px) {
+    width: 50%;
+  }
 `
 const SignUPHeader = styled("div")`
   display: flex;

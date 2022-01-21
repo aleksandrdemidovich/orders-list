@@ -37,9 +37,7 @@ function CartItem(props: CartItemPropsType) {
                 component="img"
                 alt="item"
                 height="240"
-                image={props.item.img}
-                style={{width:'30%'}}
-            />
+                image={props.item.img}/>
             <ItemInformationContainer>
                 <h2 style={{margin:'10px 0 10px 0', color:'#0288d1'}}>{props.item.name}</h2>
                 <h5 style={{margin: 0}}>{props.item.description}</h5>
@@ -73,6 +71,17 @@ const ItemContainer = styled(Paper)`
   margin-bottom: 15px;
   padding-right: 20px;
   align-items: center;
+  img{
+    width: 30%;
+  }
+
+  @media (min-width: 300px) and (max-width: 768px) {
+    flex-direction: column;
+    img{
+      width: 100%;
+    }
+    
+  }
 `
 const ItemInformationContainer = styled("div")`
   display: flex;
@@ -81,6 +90,10 @@ const ItemInformationContainer = styled("div")`
   justify-content: flex-start;
   width: 50%;
   margin-left: 25px;
+
+  @media (min-width: 300px) and (max-width: 768px) {
+    width: 100%;
+  }
 `
 const IncrementItemCountContainer = styled("div")`
   display: flex;

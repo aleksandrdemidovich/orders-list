@@ -2,11 +2,13 @@ import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {setAppError, setAppStatus} from "./app-reducer";
 import {createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut} from "firebase/auth";
 import {auth} from "../Firebase/firebase";
+import {setUserProfile} from "./profile-reducer";
 
 
 
 type InitialStateType = {
     isLoggedIn: boolean
+    email: string
 }
 
 
@@ -31,10 +33,10 @@ export const login = createAsyncThunk('auth/login', async (param: { email: strin
         const res = await signInWithEmailAndPassword(auth, param.email, param.password)
         const user = res.user;
         dispatch(setAppStatus({status: 'succeeded'}))
-        return {isLoggedIn: true}
+        return {isLoggedIn: true, email: param.email}
     } catch (error: any) {
         dispatch(setAppError({error: error.message}))
-        return {isLoggedIn: false}
+        return {isLoggedIn: false , email: ''}
     } finally {
         dispatch(setAppStatus({status: 'idle'}))
     }
@@ -45,12 +47,11 @@ export const logout = createAsyncThunk('auth/logout', async (param, {dispatch}) 
     try {
         const res = await signOut(auth)
         dispatch(setAppStatus({status: 'succeeded'}))
-        return {isLoggedIn: false}
+        return {isLoggedIn: false, email: ''}
     } catch (error: any) {
         dispatch(setAppError(error.message))
-        console.log(error)
         dispatch(setAppStatus({status: 'failed'}))
-        return {isLoggedIn: false}
+        return {isLoggedIn: false, email: ''}
     }
 })
 export const authMe = createAsyncThunk('auth/authMe', async (param, {dispatch}) => {
@@ -61,9 +62,10 @@ export const authMe = createAsyncThunk('auth/authMe', async (param, {dispatch}) 
             if (user) {
                 // User is signed in, see docs for a list of available properties
                 // https://firebase.google.com/docs/reference/js/firebase.User
-                const uid = user.uid;
-                console.log(user.displayName)
+                const {displayName, email, photoURL, metadata} = user;
+                console.log(metadata)
                 dispatch(setIsLoggedIn({value: true}))
+                dispatch(setUserProfile({profile:{displayName, email, photoURL, metadata:{createdAt: metadata.creationTime, lastLoginAt: metadata.lastSignInTime}}}))
                 dispatch(setAppStatus({status: 'succeeded'}))
             } else {
                 // User is signed out
@@ -74,6 +76,8 @@ export const authMe = createAsyncThunk('auth/authMe', async (param, {dispatch}) 
         dispatch(setAppError(error.message))
         dispatch(setAppStatus({status: 'failed'}))
         dispatch(setIsLoggedIn({value: false}))
+    } finally {
+        dispatch(setAppStatus({status: 'idle'}))
     }
 })
 
@@ -81,7 +85,8 @@ export const authMe = createAsyncThunk('auth/authMe', async (param, {dispatch}) 
 export const slice = createSlice({
     name: 'auth',
     initialState: {
-        isLoggedIn: false
+        isLoggedIn: false,
+        email: ''
     } as InitialStateType,
     reducers: {
         setIsLoggedIn(state, action: PayloadAction<{ value: boolean }>) {
@@ -92,9 +97,11 @@ export const slice = createSlice({
         builder
             .addCase(login.fulfilled, (state, action) => {
                 state.isLoggedIn = action.payload.isLoggedIn
+                state.email = action.payload.email
             })
             .addCase(logout.fulfilled, (state, action) => {
                 state.isLoggedIn = action.payload.isLoggedIn
+                state.email = action.payload.email
             })
     }
 })

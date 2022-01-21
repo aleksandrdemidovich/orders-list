@@ -6,15 +6,19 @@ import InfoAboutOrderPage from "../pages/InformationAboutOrder/InfoAboutOrderPag
 import NewProductPage from "../pages/NewProduct/NewProductPage";
 import Login from "../pages/Auth/Login";
 import SignUP from "../pages/Auth/SignUP";
+import Profile from "../pages/Profile/Profile";
+import Settings from "../pages/Settings/Settings";
 
 
 export const PATH = {
     PRODUCTS: '/products-list',
     CART: '/cart',
     INFO_ABOUT_ORDER: '/info-about-order',
-    CREATE_NEW_PRODUCT:'/create-new-product',
-    LOGIN:'/login',
-    SIGN_UP:'/signUP'
+    CREATE_NEW_PRODUCT: '/create-new-product',
+    LOGIN: '/login',
+    SIGN_UP: '/signUP',
+    PROFILE: '/profile',
+    SETTINGS: '/settings',
 }
 
 
@@ -30,6 +34,8 @@ function AppRoutes() {
                 <Route path={PATH.CREATE_NEW_PRODUCT} element={<NewProductPage/>}/>
                 <Route path={PATH.LOGIN} element={<Login/>}/>
                 <Route path={PATH.SIGN_UP} element={<SignUP/>}/>
+                <Route path={PATH.PROFILE} element={<Profile/>}/>
+                <Route path={PATH.SETTINGS} element={<Settings/>}/>
             </Routes>
         </>
     )
