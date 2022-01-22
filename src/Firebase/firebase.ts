@@ -23,7 +23,7 @@ export const firebaseConfig = {
 };
 export const uiConfig = {
     signInFlow: 'popup',
-    signInSuccessUrl: 'http://localhost:3000/products-list', // This URL is used to return to that page when we got success response for phone authentication.
+    signInSuccessUrl: 'https://aleksandrdemidovich.github.io/orders-list/', // This URL is used to return to that page when we got success response for phone authentication.
     signInOptions: [
         { provider: GoogleAuthProvider.PROVIDER_ID, defaultCountry: 'EN' },
         { provider: FacebookAuthProvider.PROVIDER_ID, defaultCountry: 'EN'},

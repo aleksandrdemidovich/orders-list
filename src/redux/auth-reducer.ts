@@ -1,8 +1,9 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {setAppError, setAppStatus} from "./app-reducer";
 import {createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut} from "firebase/auth";
-import {auth} from "../Firebase/firebase";
+import {auth, db} from "../Firebase/firebase";
 import {setUserProfile} from "./profile-reducer";
+import {addDoc, collection, doc, getDoc, setDoc} from "firebase/firestore";
 
 
 
@@ -18,7 +19,7 @@ export const signUP = createAsyncThunk('auth/signUp', async (param: { email: str
     try {
         const res = await createUserWithEmailAndPassword(auth, param.email, param.password)
         const user = res.user;
-        console.log(user)
+        dispatch(addNewUser({uid: user.uid, displayName:user.displayName, email:user.email, photoURL: user.photoURL, createdAt: user.metadata.creationTime}))
         dispatch(setAppStatus({status: 'succeeded'}))
     } catch (error: any) {
         dispatch(setAppError({error: error.message}))
@@ -32,6 +33,7 @@ export const login = createAsyncThunk('auth/login', async (param: { email: strin
     try {
         const res = await signInWithEmailAndPassword(auth, param.email, param.password)
         const user = res.user;
+        console.log(user)
         dispatch(setAppStatus({status: 'succeeded'}))
         return {isLoggedIn: true, email: param.email}
     } catch (error: any) {
@@ -58,14 +60,20 @@ export const authMe = createAsyncThunk('auth/authMe', async (param, {dispatch}) 
     dispatch(setAppError({error: null}))
     dispatch(setAppStatus({status: 'loading'}))
     try {
-        const res = await onAuthStateChanged(auth, (user) => {
+        const res = await onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // User is signed in, see docs for a list of available properties
-                // https://firebase.google.com/docs/reference/js/firebase.User
                 const {displayName, email, photoURL, metadata} = user;
-                console.log(metadata)
+
+                const docRef = doc(db, "users", user.uid);
+                const docSnap = await getDoc(docRef);
+                console.log(user)
                 dispatch(setIsLoggedIn({value: true}))
                 dispatch(setUserProfile({profile:{displayName, email, photoURL, metadata:{createdAt: metadata.creationTime, lastLoginAt: metadata.lastSignInTime}}}))
+                if (docSnap.exists()) {
+                    console.log("Document data:", docSnap.data());
+                } else {
+                    dispatch(addNewUser({uid: user.uid, displayName:user.displayName, email:user.email, photoURL: user.photoURL, createdAt: user.metadata.creationTime}))
+                }
                 dispatch(setAppStatus({status: 'succeeded'}))
             } else {
                 // User is signed out
@@ -80,7 +88,26 @@ export const authMe = createAsyncThunk('auth/authMe', async (param, {dispatch}) 
         dispatch(setAppStatus({status: 'idle'}))
     }
 })
-
+export const addNewUser = createAsyncThunk('auth/addNewUser',
+    async (param: { displayName: any, email: string | null, photoURL: string | null, uid: string, createdAt: string | undefined,}, {dispatch}) => {
+    debugger
+    dispatch(setAppError({error: ''}))
+    dispatch(setAppStatus({status: 'loading'}));
+    try {
+        const docRef = await setDoc(doc(db, "users", param.uid), {
+            displayName: param.displayName,
+            email: param.email,
+            photoURL: param.photoURL,
+            uid: param.uid,
+            createdAt: param.createdAt,
+        });
+        dispatch(setAppStatus({status: "succeeded"}))
+    } catch (e) {
+        dispatch(setAppError({error: e as string}))
+    } finally {
+        dispatch(setAppStatus({status: "idle"}))
+    }
+})
 
 export const slice = createSlice({
     name: 'auth',

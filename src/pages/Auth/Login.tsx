@@ -43,7 +43,6 @@ function Login() {
         },
         onSubmit: (values) => {
             dispatch(login({email: formik.values.email, password: formik.values.password}))
-            // formik.resetForm()
         },
     })
 
@@ -64,17 +63,8 @@ function Login() {
                 firebase.app() // if already initialized, use that one
                 ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth())
             }
-            // const uiConfig = {
-            //     signInFlow: 'popup',
-            //     signInSuccessUrl: 'http://localhost:3000/products-list', // This URL is used to return to that page when we got success response for phone authentication.
-            //     signInOptions: [{ provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID, defaultCountry: 'EN' },
-            //         { provider: firebase.auth.FacebookAuthProvider.PROVIDER_ID, defaultCountry: 'EN'}],
-            //     tosUrl: 'http://localhost:3000/'
-            // }
             ui.disableAutoSignIn()
             ui.start('#firebaseui-auth-container', uiConfig)
-
-
         }
         firebase_()
     })

@@ -17,7 +17,7 @@ function Profile() {
 
     useEffect(() => {
         dispatch(authMe())
-    }, [])
+    }, [dispatch])
 
     if (!isLoggedIn) {
         return <Navigate to={PATH.LOGIN}/>
@@ -28,7 +28,7 @@ function Profile() {
             <RootInfoContainer elevation={10}>
                 <Avatar
                     alt={userProfile!.email as string} src={userProfile!.photoURL !== null ? userProfile!.photoURL : 'I'}
-                    sx={{ width: 50, height: 50 }}
+                    sx={{ width: 250, height: 250 }}
                 />
                 <ProfileInfoContainer>
                     <Typography variant="h4" gutterBottom component="div">
